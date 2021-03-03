@@ -20,7 +20,7 @@ int main() {
    pthread_create(&t, NULL, child, (void*) input);
 
    // 等待子執行緒計算完畢
-   pthread_join(t, &ret);
+   pthread_join(t, &ret);       
 
    // 取得計算結果
    int *result = (int *) ret;
