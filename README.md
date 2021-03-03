@@ -9,3 +9,5 @@
 ## signal
 
 ## pointer
+
+## linux C socket
