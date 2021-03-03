@@ -1,6 +1,6 @@
 # Linux C exercise notes
 
-## 檔案IO 標準IO
+## file I/O   std I/O
 
 ## Process(行程)
 
