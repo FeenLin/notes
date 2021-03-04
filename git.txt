@@ -13,3 +13,5 @@ git push -u origin master
 git status
 
 git pull
+
+git fetch 
