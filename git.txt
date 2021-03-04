@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 5730541fe2e485abbab4b6df6140f55c7552468a
 git init
 
 git add .
@@ -12,7 +8,7 @@ git remote add origin https://github.com/FeenLin/study_notes.git
 
 git remote -v
 
-git push -u origin master
+git push -u origin master   == git push --set-upstream origin master
 
 
 git status
@@ -22,3 +18,5 @@ git pull
 git fetch 
 
 git status
+
+git pull --rebase
