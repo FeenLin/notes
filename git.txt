@@ -1,0 +1,13 @@
+git init
+
+git add .
+
+git commit -m "1234"
+
+git remote add origin https://github.com/FeenLin/study_notes.git
+
+git remote -v
+
+git push -u origin master
+
+git status
