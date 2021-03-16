@@ -1,0 +1,12 @@
+
+ name: Peter
+ age: 24
+ height: 175
+ weight: 60
+ profession: student2
+
+name: Feen
+ age: 25
+ height: 177
+ weight: 70
+ profession: student

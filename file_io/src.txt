@@ -1,0 +1,5 @@
+ name: Feen
+ age: 25
+ height: 177
+ weight: 70
+ profession: student
