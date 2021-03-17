@@ -1,5 +1,5 @@
-/*  創一個src.txt文件描述PEOPLE -> 再複製到 DEST.txt裡 -> 利用thread執行加入互斥鎖
-
+/*  1.創一個src.txt文件描述PEOPLE -> 再複製到 DEST.txt裡 -> 利用thread執行加入互斥鎖
+    2.
 */
 #include<stdio.h>
 #include<stdlib.h>
@@ -22,7 +22,7 @@ struct PEOPLE_DESCR
 }feen,peter;
 
 
-int main(int argc, char *argv[]){
+int main(int argc, char* argv[]){
     pthread_t thread1, thread2;
     pthread_create(&thread1, NULL,Producer, NULL);
     pthread_create(&thread2, NULL,Consumer, NULL);
@@ -96,5 +96,6 @@ static void* Consumer(){
     fclose(fp2);
     pthread_mutex_unlock( &mutex1 );
     pthread_exit(NULL);
-    //return 0;
+    return 0;
 }
+
