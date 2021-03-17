@@ -7,18 +7,23 @@
 #include<string.h>
 #include<unistd.h>  
 
+int port=2000;
+
 int main(void){
     struct sockaddr_in stSockaddr;
-    int res;
-    int SockFD = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
+    int res, ret;
+    int SockFD = socket(AF_INET,SOCK_STREAM,0);
     if(SockFD == -1){
         fprintf(stderr,"create socket fail");
         exit(EXIT_FAILURE);
     }
+    else{
+        printf("creat successfully\n");
+    }
 
     memset(&SockFD,0,sizeof(struct sockaddr_in));
     stSockaddr.sin_family = AF_INET;
-    stSockaddr.sin_port = htons(1100);
+    stSockaddr.sin_port = htons(port);
 
     res =inet_pton(AF_INET,"192.168.1.3",&stSockaddr.sin_addr);
     if(res < 0){
@@ -32,11 +37,19 @@ int main(void){
         close(SockFD);
         exit(EXIT_FAILURE);
     }
+    else{
+        printf("inet_pton successfully\n");
+    }
 
-    if((connect(SockFD,(const struct sockaddr *)&stSockaddr,sizeof(struct sockaddr_in))) == -1){
+    ret = connect(SockFD,(const struct sockaddr *)&stSockaddr,sizeof(struct sockaddr_in));
+    
+    if(ret == -1){
         perror("connect failed");
         close(SockFD);
         exit(EXIT_FAILURE);
+    }
+    else{
+        printf("connect successfully\n");
     }
 
 

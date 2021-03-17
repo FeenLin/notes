@@ -7,24 +7,34 @@
 #include<string.h>
 #include<unistd.h>  
 
+int port=2000;
+
 int main(void){
    
     struct sockaddr_in stSockaddr;
-    int SockFD = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);    //創建時使用PF_XXX(Protocol Family)  SOCK_STREAM => TCP  SOCK_DGRAM => UDP
+    int SockFD = socket(PF_INET, SOCK_STREAM,0);
     if(SockFD == -1){
         perror("creat socket failed: ");
         exit(EXIT_FAILURE);
     }
+    else{
+        printf("creat successfully %d\n",SockFD);
+    }
 
     memset(&SockFD,0,sizeof(struct sockaddr_in));
     stSockaddr.sin_family = AF_INET;
-    stSockaddr.sin_port = htons(1100);
+    stSockaddr.sin_port = htons(port);
     stSockaddr.sin_addr.s_addr = INADDR_ANY;
 
-    if(bind(SockFD,(struct sockaddr *)&stSockaddr, sizeof(struct sockaddr_in)) == -1){
+    int ret =bind(SockFD,(struct sockaddr *) &stSockaddr, sizeof(struct sockaddr_in));
+    if( ret == -1){
         perror("bind failed: ");
+        printf("ret = %d\n",ret);
         close(SockFD);
         exit(EXIT_FAILURE);
+    }
+    else{
+        printf("bind successfully\n");
     }
 
     if(listen(SockFD,10) == -1){
@@ -32,13 +42,20 @@ int main(void){
         close(SockFD);
         exit(EXIT_FAILURE);
     }
+    else{
+        printf("listen successfully\n");
+    }
 
-    for( ; ;){
+    while(1){
         int ConnentFD = accept(SockFD, NULL, NULL);
         if(ConnentFD < 0){
             perror("connent failed: ");
+            printf("connent = %d\n",ConnentFD);
             close(SockFD);
             exit(EXIT_FAILURE);
+        }
+        else{
+            printf("accept successfully\n");
         }
 
         shutdown(ConnentFD,SHUT_RDWR);
