@@ -12,7 +12,7 @@ int port=2000;
 int main(void){
    
     struct sockaddr_in stSockaddr;
-    int SockFD = socket(PF_INET, SOCK_STREAM,0);
+    int SockFD = socket(AF_INET, SOCK_STREAM,0);
     if(SockFD == -1){
         perror("creat socket failed: ");
         exit(EXIT_FAILURE);
@@ -21,12 +21,13 @@ int main(void){
         printf("creat successfully %d\n",SockFD);
     }
 
-    memset(&SockFD,0,sizeof(struct sockaddr_in));
-    stSockaddr.sin_family = AF_INET;
+    //memset(&stSockaddr,0,sizeof(struct sockaddr_in));
+    bzero(&stSockaddr,sizeof(stSockaddr));
+    stSockaddr.sin_family = PF_INET;
     stSockaddr.sin_port = htons(port);
     stSockaddr.sin_addr.s_addr = INADDR_ANY;
 
-    int ret =bind(SockFD,(struct sockaddr *) &stSockaddr, sizeof(struct sockaddr_in));
+    int ret =bind(SockFD,(struct sockaddr *)&stSockaddr, sizeof(stSockaddr));
     if( ret == -1){
         perror("bind failed: ");
         printf("ret = %d\n",ret);
@@ -56,6 +57,7 @@ int main(void){
         }
         else{
             printf("accept successfully\n");
+            break;
         }
 
         shutdown(ConnentFD,SHUT_RDWR);

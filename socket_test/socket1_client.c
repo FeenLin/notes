@@ -21,11 +21,12 @@ int main(void){
         printf("creat successfully\n");
     }
 
-    memset(&SockFD,0,sizeof(struct sockaddr_in));
+    //memset(&SockFD,0,sizeof(struct sockaddr_in));
+    bzero(&stSockaddr,sizeof(stSockaddr));
     stSockaddr.sin_family = AF_INET;
     stSockaddr.sin_port = htons(port);
 
-    res =inet_pton(AF_INET,"192.168.1.3",&stSockaddr.sin_addr);
+    res =inet_pton(AF_INET,"127.0.0.1",&stSockaddr.sin_addr);
     if(res < 0){
         perror("first parameter is not a valid address family : ");
         close(SockFD);
@@ -41,7 +42,7 @@ int main(void){
         printf("inet_pton successfully\n");
     }
 
-    ret = connect(SockFD,(const struct sockaddr *)&stSockaddr,sizeof(struct sockaddr_in));
+    ret = connect(SockFD,(const struct sockaddr *)&stSockaddr,sizeof(stSockaddr));
     
     if(ret == -1){
         perror("connect failed");
