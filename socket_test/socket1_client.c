@@ -21,8 +21,8 @@ int main(void){
         printf("creat successfully\n");
     }
 
-    //memset(&SockFD,0,sizeof(struct sockaddr_in));
-    bzero(&stSockaddr,sizeof(stSockaddr));
+    memset(&stSockaddr,0,sizeof(stSockaddr));
+    //bzero(&stSockaddr,sizeof(stSockaddr));
     stSockaddr.sin_family = AF_INET;
     stSockaddr.sin_port = htons(port);
 
@@ -51,6 +51,12 @@ int main(void){
     }
     else{
         printf("connect successfully\n");
+        char message[] = {"client"};
+        char receiveMessage[100] = {};
+        send(SockFD,message,sizeof(message),0);
+        recv(SockFD,receiveMessage,sizeof(receiveMessage),0);
+
+        printf("%s",receiveMessage);
     }
 
 

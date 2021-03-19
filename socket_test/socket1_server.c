@@ -10,7 +10,8 @@
 int port=2000;
 
 int main(void){
-   
+    char inputbuffer[256]={};
+    char message[]={"hellooooooo world\n"};
     struct sockaddr_in stSockaddr;
     int SockFD = socket(AF_INET, SOCK_STREAM,0);
     if(SockFD == -1){
@@ -21,8 +22,8 @@ int main(void){
         printf("creat successfully %d\n",SockFD);
     }
 
-    //memset(&stSockaddr,0,sizeof(struct sockaddr_in));
-    bzero(&stSockaddr,sizeof(stSockaddr));
+    memset(&stSockaddr,0,sizeof(stSockaddr));
+    //bzero(&stSockaddr,sizeof(stSockaddr));
     stSockaddr.sin_family = PF_INET;
     stSockaddr.sin_port = htons(port);
     stSockaddr.sin_addr.s_addr = INADDR_ANY;
@@ -57,6 +58,9 @@ int main(void){
         }
         else{
             printf("accept successfully\n");
+            send(ConnentFD,message,sizeof(message),0);
+            recv(ConnentFD,inputbuffer,sizeof(inputbuffer),0);
+            printf("%s:\n ",inputbuffer);
             break;
         }
 
