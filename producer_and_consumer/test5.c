@@ -12,14 +12,23 @@ static void* Producer();
 static void* Consumer();
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
-struct PEOPLE_DESCR
+typedef struct 
+{
+    char* name;
+    int age;
+    int height;
+    int weight;
+    char* profession;
+}PEOPLE_DESCR;
+
+typedef struct 
 {
     char name[20];
     int age;
     int height;
     int weight;
     char profession[20];
-}feen,peter;
+}PEOPLE_DESCR2;
 
 
 int main(int argc, char* argv[]){
@@ -43,13 +52,17 @@ static void* Producer(){
     }
 
     //struct PEOPLE_DESCR feen;
-    strncpy(feen.name, "Feen",20);
-    feen.age = 25, feen.height = 177, feen.weight = 70;
-    strncpy(feen.profession,"student",20);
+    PEOPLE_DESCR* feen=malloc(sizeof(PEOPLE_DESCR));
+    feen->name=malloc(sizeof(char*));
+    strncpy(feen->name, "Feen",20);
+    feen->age = 25, feen->height = 177, feen->weight = 71;
+    feen->profession=malloc(sizeof(char*));
+    strncpy(feen->profession,"student",20);
     
-    fprintf(fp1,"\nname: %s\n age: %d\n height: %d\n weight: %d\n profession: %s\n",feen.name,feen.age,feen.height,\
-            feen.weight,feen.profession);
+    fprintf(fp1,"\nname: %s\n age: %d\n height: %d\n weight: %d\n profession: %s\n",feen->name,feen->age,feen->height,\
+            feen->weight,feen->profession);
 
+    PEOPLE_DESCR2 peter;
     strncpy(peter.name, "Peter",20);
     peter.age = 24, peter.height = 175, peter.weight = 60;
     strncpy(peter.profession,"student2",20);
