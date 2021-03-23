@@ -1,0 +1,24 @@
+int a;
+                a是一個 int型別
+int *a;
+                a是一個 指向int型別的指標 
+int **a;
+                a是一個 指向int型別的指標的指標
+int a[10];
+                a是一個 陣列擁有10個int型別的data
+int *a[10];
+                a是一個 指標指向 陣列擁有10個int型別的data #(有10個指標)
+int (*a)[10];
+                a是一個 指標指向一塊記憶體位址 此記憶體擁有10個int型別的data #(有1個指標)
+int (*a)(int);
+                一個function_pointer a是function_name (int)是參數,此function會回傳 int型別data 
+int (*a[10])(int);
+                一個指標有 10的int陣列   指向函數 ,此函數回傳int型別
+const int *foo; 
+                *foo是指標 指向const int
+int const *foo;
+                *foo是指標 指向const int
+int* const foo; 
+                const foo是指標 指向int
+int const *const foo;
+                const foo是指標  指向 const int
