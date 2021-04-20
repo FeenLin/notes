@@ -34,7 +34,7 @@ int main()
     pthread_create (&thread_a, NULL, (void *) &handler, (void *) &i[0]);
     pthread_create (&thread_b, NULL, (void *) &handler, (void *) &i[1]);
      
-    pthread_join(thread_a, NULL); // 特別標註一下，join是表示要等這個thread結束才會繼續執行下去，否則主程式結束了thread還沒結束怎麼行呢XD
+    pthread_join(thread_a, NULL); 
     pthread_join(thread_b, NULL);
  
     sem_destroy(&mutex); /* destroy semaphore */

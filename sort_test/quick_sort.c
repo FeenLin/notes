@@ -33,15 +33,15 @@ static void quick_sort(int arry[],int left,int right){
         int j =right+1;
 
         while(1){
-            while(arry[++i] < pivot);
-            while(arry[--j] > pivot);
+            while(arry[++i] < pivot); //往右找
+            while(arry[--j] > pivot); //往左找
             if (i >= j)
             {
                 break;
             }
             SWAP(arry[i] , arry[j]);
         }
-    quick_sort(arry,left,i-1);
-    quick_sort(arry,j+1,right);
+    quick_sort(arry,left,i-1);  //向左邊遞迴
+    quick_sort(arry,j+1,right); //向右邊遞迴
     }
 }
