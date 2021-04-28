@@ -48,29 +48,32 @@ int main(int argc, char *argv[])
     pthread_cond_destroy(&cond_prod);
     pthread_cond_destroy(&cond_cons);
 
-    printf("/n --- END ---/n");
+    printf("\n --- END ---\n");
     return 0;
 }
 
 static void* Consumer(void *ptr)      //Consumer提問(突發性) 
 {      
-    for(int i=0;i<3;i++ ){       
+    for(int i =0 ; i < 10; i++){ 
         printf("\n--- running Consumer thread ---\n");
 
         pthread_mutex_lock(&mutex1);
-        printf("\n      ---Consumer thread lock ---\n");     
+        //printf("\n      ---Consumer thread lock ---\n");     
         sleep(1);
-        in = 1;
+        //in = 1;
         while ( in == 1){
-            printf("\n*** Waitting 等答案 in = %d ***\n",in);
+            //printf("\n*** Waitting 等答案 in = %d ***\n",in);
             pthread_cond_wait(&cond_cons,&mutex1);
+            in = 0;
         }
         printf(" Consumer : %s\n ",qa1.ques);   // 問題
-        in = 0;
+        
         pthread_cond_signal(&cond_prod);
         pthread_mutex_unlock(&mutex1);
-        printf("\n      ---Consumer thread unlock ---\n");
-    }
+        //printf("\n      ---Consumer thread unlock ---\n");
+        in = 1;
+      }
+    out = 5;
     pthread_exit(0);
 }
 
@@ -79,13 +82,19 @@ static void* Proudce(void *ptr)    //Proudce解答(常駐)
     while(1){        
         printf("\n--- running Proudce thread ---\n");
 
+        if(out == 5){
+            break;
+        }
+
         pthread_mutex_lock(&mutex1);
-        printf("\n      --- Proudcer thread lock ---\n"); 
+        //printf("\n      --- Proudcer thread lock ---\n"); 
         sleep(1); 
+
         
         while(in == 0){
-            printf("\n*** Waitting 等提問 in = %d ***\n",in);
-            pthread_cond_wait(&cond_prod,&mutex1); 
+            //printf("\n*** Waitting 等提問 in = %d ***\n",in);
+            pthread_cond_wait(&cond_prod,&mutex1);
+            in = 1;
         }
        
         printf("Proudce  : %s\n",qa1.ans);  // 答案
@@ -93,7 +102,7 @@ static void* Proudce(void *ptr)    //Proudce解答(常駐)
         pthread_mutex_unlock(&mutex1);
         in = 0;
        
-        printf("\n      ---Proudce thread unlock ---\n");
+        //printf("\n      ---Proudce thread unlock ---\n");
         
     }
    pthread_exit(0);
