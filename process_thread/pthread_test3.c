@@ -7,7 +7,7 @@ void *child(void *arg) {
    int *input = (int *) arg; // 取得資料
    int *result = malloc(sizeof(int) * 1); // 配置記憶體
    result[0] = input[0] + input[1]; // 進行計算
-   pthread_exit((void *) result); // 傳回結果
+    // 傳回結果
 }
 
 // 主程式
