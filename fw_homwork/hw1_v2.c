@@ -16,22 +16,31 @@ static void* Proudce(void *ptr);   //回答
 typedef struct{
     char const *ques;
     char const *ans;
+    const int num;
 }QandA;
-QandA qa[]={{.ques="How are you ?",.ans="fine"},{.ques="What are you doing?",.ans="playing" }};
+QandA qa[]={{.ques="How are you ?"      ,.ans="fine",    .num=1 },
+            {.ques="What are you doing?",.ans="playing", .num=2 }};
     
 
 
 int main(int argc, char *argv[])
 {
-   
-    
+
     pthread_t thread1,thread2;
     pthread_mutex_init(&mutex1,NULL);
     pthread_cond_init(&cond_cons,NULL);
     pthread_cond_init(&cond_prod,NULL);
 
-    pthread_create( &thread1, NULL, &Consumer, (void*)NULL);
-    pthread_create( &thread2, NULL, &Proudce , (void*)NULL);
+    if((pthread_create( &thread1, NULL, &Consumer,(void*)NULL)) != 0){
+        perror("create Consumer error: ");
+        pthread_mutex_destroy(&mutex1);
+    }
+
+    if((pthread_create( &thread2, NULL, &Proudce ,(void*)NULL)) != 0){
+        perror("create Proudcer error: ");
+        pthread_mutex_destroy(&mutex1);
+    }
+
 
     if((pthread_join(thread1,NULL)) != 0){
         perror("join thread 1 error: ");
@@ -52,18 +61,14 @@ int main(int argc, char *argv[])
 
 static void* Consumer(void *ptr)      //Consumer提問(突發性) 
 {      
-    //for(int i =0 ; i < 10; i++){ 
+    while(1){ 
         printf("\n--- running Consumer thread ---\n");
-
-        pthread_mutex_lock(&mutex1);
-        //printf("\n      ---Consumer thread lock ---\n");     
-        sleep(1);
         srand(time(NULL));
         rand_num = rand() %2+1;
-        sleep(2);
+        pthread_mutex_lock(&mutex1);          
+
         printf("\nrand number: %d\n",rand_num);
         while ( in == 1){
-            //printf("\n*** Waitting 等答案 in = %d ***\n",in);
             pthread_cond_wait(&cond_cons,&mutex1);
             in = 0;
         }
@@ -75,9 +80,8 @@ static void* Consumer(void *ptr)      //Consumer提問(突發性)
         }
         pthread_cond_signal(&cond_prod);
         pthread_mutex_unlock(&mutex1);
-        //printf("\n      ---Consumer thread unlock ---\n");
         in = 1;
-      //}
+      }
     out = 5;
     pthread_exit(0);
 }
@@ -93,12 +97,11 @@ static void* Proudce(void *ptr)    //Proudce解答(常駐)
         }
 
         pthread_mutex_lock(&mutex1);
-        //printf("\n      --- Proudcer thread lock ---\n"); 
         sleep(1); 
 
         
         while(in == 0){
-            //printf("\n*** Waitting 等提問 in = %d ***\n",in);
+            
             pthread_cond_wait(&cond_prod,&mutex1);
             in = 1;
         }
@@ -112,7 +115,6 @@ static void* Proudce(void *ptr)    //Proudce解答(常駐)
         pthread_mutex_unlock(&mutex1);
         in = 0;
        
-        //printf("\n      ---Proudce thread unlock ---\n");
         
     }
    pthread_exit(0);

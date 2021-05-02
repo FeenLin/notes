@@ -48,13 +48,13 @@ int main(int argc, char *argv[])
     pthread_cond_destroy(&cond_prod);
     pthread_cond_destroy(&cond_cons);
 
-    printf("/n --- END ---/n");
+    printf("\n --- END ---\n");
     return 0;
 }
 
 static void* Consumer(void *ptr)      //Consumer提問(突發性) 
 {      
-    for(int i =0 ; i < 10; i++){ 
+    for(int i =0 ; i < 5; i++){ 
         printf("\n--- running Consumer thread ---\n");
 
         pthread_mutex_lock(&mutex1);
