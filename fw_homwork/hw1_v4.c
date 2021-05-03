@@ -23,13 +23,13 @@ typedef struct{
     const int num;
 }QandA;
 QandA qa[]={{.ques="How are you ?"      ,.ans="fine",    .num=1 },
-            {.ques="What are you doing?",.ans="playing", .num=2 }};
+            {.ques="What are you doing?",.ans="playing", .num=2 },
+            {.ques="Where are you going?",.ans="school", .num=3}};
 
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
-    i = rand()%2;
-    printf("i = %d\n",i); 
+    
 
     pthread_t thread1,thread2;
     pthread_mutex_init(&mutex1,NULL);
@@ -72,19 +72,20 @@ static void* Consumer(void *ptr)      //Consumer提問(突發性)
         //printf("\n--- running Consumer thread ---\n");
 
         pthread_mutex_lock(&mutex1);
-        memset(buff,'\0',BUFFSIZE);
-        snprintf(buff,BUFFSIZE,"%s",qa[i].ques);         
-        //printf("%s\n",buff);
         inbuff = 1;
         while ( inbuff == 1){
             printf("C wait\n");
+            i = rand()%3;
+            printf("i = %d\n",i);
+            memset(buff,'\0',BUFFSIZE);
+            snprintf(buff,BUFFSIZE,"%s",qa[i].ques);
             printf("%s\n",buff);
             find_ans = 0;
             pthread_cond_signal(&cond_prod);
             pthread_cond_wait(&cond_cons,&mutex1);
         }
 
-        //if(find_ans == 1){
+       
             printf("\n---顯示答案---\n");
             printf("%s\n",buff);
             sleep(1);
@@ -93,7 +94,7 @@ static void* Consumer(void *ptr)      //Consumer提問(突發性)
             pthread_cond_signal(&cond_prod);
             pthread_mutex_unlock(&mutex1);
             
-        //}
+       
     }
     pthread_exit(0);
 }

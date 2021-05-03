@@ -80,7 +80,7 @@ static void* Consumer(void *ptr)      //Consumer提問(突發性)
             memset(buff,'\0',BUFFSIZE);
             snprintf(buff,BUFFSIZE,"%s",qa[i].ques);
             printf("%s\n",buff);
-            find_ans = 0;
+            //find_ans = 0;
             pthread_cond_signal(&cond_prod);
             pthread_cond_wait(&cond_cons,&mutex1);
         }
@@ -90,7 +90,7 @@ static void* Consumer(void *ptr)      //Consumer提問(突發性)
             printf("%s\n",buff);
             sleep(1);
             inbuff = 0;
-            find_ans = 0;
+            //find_ans = 0;
             pthread_cond_signal(&cond_prod);
             pthread_mutex_unlock(&mutex1);
             
@@ -106,7 +106,7 @@ static void* Proudce(void *ptr)    //Proudce解答(常駐)
 
         pthread_mutex_lock(&mutex1);
         
-        while(inbuff == 0 && find_ans == 0){
+        while(inbuff == 0 ){
             printf("P wait\n");
             inbuff = 1;
             pthread_cond_signal(&cond_cons);
@@ -114,18 +114,14 @@ static void* Proudce(void *ptr)    //Proudce解答(常駐)
         }
         //printf("\n---尋找答案---\n");
         
-        if(strncmp(buff,qa[i].ques,BUFFSIZE) == 0 ){
+        if(strcmp(buff,qa[i].ques) == 0 ){
                 printf("\n---找到答案---\n");
                 memset(buff,'\0',BUFFSIZE);
                 snprintf(buff,BUFFSIZE,"%s",qa[i].ans);
-                find_ans = 1;
-        }
-
-        if(find_ans == 1){
-            inbuff = 0;
-            pthread_cond_signal(&cond_cons);
-            //printf("呼叫 Consumer\n");
-            pthread_mutex_unlock(&mutex1);
+                inbuff = 0;
+                pthread_cond_signal(&cond_cons);
+                printf("呼叫 Consumer\n");
+                pthread_mutex_unlock(&mutex1);
         }
        
     }
