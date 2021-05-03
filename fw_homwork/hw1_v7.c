@@ -19,8 +19,8 @@ typedef struct{
 }QandA;
 
 QandA qa[]={{.ques="How are you ?"      ,.ans="fine"},
-                {.ques="What are you doing?",.ans="playing"},
-                {.ques="Where are you going?",.ans="school"}};
+            {.ques="What are you doing?",.ans="playing"},
+            {.ques="Where are you going?",.ans="school"}};
     
 
 int main (int argc, char *argv[])
@@ -39,13 +39,17 @@ int main (int argc, char *argv[])
         perror("create Proudcer error: ");
         pthread_mutex_destroy(&mutex1);
      }
-
+    
      if((pthread_join(thread1,NULL)) != 0){
         perror("join thread 1 error: ");
+        pthread_mutex_destroy(&mutex1);
     } 
+    
+    
 
     if((pthread_join(thread2,NULL)) != 0){
         perror("join thread 2 error: ");
+        pthread_mutex_destroy(&mutex1);
     } 
 
     pthread_mutex_destroy(&mutex1);
@@ -56,35 +60,53 @@ int main (int argc, char *argv[])
 
 static void* Consumer(void *arg)
 {   
-    pthread_mutex_lock(&mutex1);
-    int len =  sizeof(qa)/sizeof(qa[0]);
-    int rand_num = rand() %len;
+  printf("\n--- Consumer ---\n");
+  //while(1){
+    //pthread_mutex_lock(&mutex1);
+    int rand_num = rand() % sizeof(qa)/sizeof(qa[0]);
     QandA *qa_consumer = (QandA*)arg;
     snprintf(buff_ques,BUFFSIZE,"%s",qa_consumer[rand_num].ques);
-    printf("Consumer: %s\n\n",buff_ques);
+    printf("\n\nConsumer: %s\n\n",buff_ques);
+    sleep(1);
+    //pthread_mutex_unlock(&mutex1);
+    
+    if((strcmp(buff_ans,qa_consumer[rand_num].ans)) == 0)
+    {
+        printf("Consumer ANS: %s\n",buff_ans);
+        sleep(1);
+        //break;
+    }
+        
+    //}
+    printf("----------\n");
   
-    pthread_mutex_unlock(&mutex1);
+    //pthread_mutex_unlock(&mutex1);
     pthread_exit(0);
 }
 
 static void* Proudcer(void *arg)
 {
-    pthread_mutex_lock(&mutex1);
-    QandA *qa_proudce = (QandA*)arg;
+    printf("\n--- Proudcer ---\n");
+    while(1){
+        pthread_mutex_lock(&mutex1);
+        QandA *qa_proudce = (QandA*)arg;
     
-    for(int i =0; i< sizeof(qa)/sizeof(qa[0]) ; i++)
-    {
-        if((strcmp(buff_ques,qa_proudce[i].ques)) == 0 )
+        for(int i =0; i< sizeof(qa)/sizeof(qa[0]) ; i++)
         {
-            snprintf(buff_ans,BUFFSIZE,"%s",qa_proudce[i].ans);
-            break;
+            if((strcmp(buff_ques,qa_proudce[i].ques)) == 0 )
+            {
+                snprintf(buff_ans,BUFFSIZE,"%s",qa_proudce[i].ans);
+                break;
+            }
+           if((strcmp(buff_ques,qa_proudce[i].ques)) != 0 )
+            {
+                snprintf(buff_ans,BUFFSIZE,"not found");
+            }
         }
-        if((strcmp(buff_ques,qa_proudce[i].ques)) != 0 )
-        {
-            snprintf(buff_ans,BUFFSIZE,"not found");
-        }
+        printf("Proudcer: %s\n",buff_ans);
+        break;
+        sleep(1);
     }
-    printf("Proudcer: %s\n",buff_ans);
     pthread_mutex_unlock(&mutex1);
     pthread_exit(0);
 }
