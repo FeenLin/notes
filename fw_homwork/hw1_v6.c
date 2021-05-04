@@ -16,6 +16,8 @@ static void* Proudcer(void *arg);   //回答
 typedef struct{
     char const *ques;
     char const *ans;
+
+    
 }QandA;
 
 QandA qa[]={{.ques="How are you ?"      ,.ans="fine"},
@@ -62,13 +64,13 @@ static void* Consumer(void *arg)
     int rand_num = rand() % sizeof(qa)/sizeof(qa[0]);
     QandA *qa_consumer = (QandA*)arg;
     snprintf(buff_ques,BUFFSIZE,"%s",qa_consumer[rand_num].ques);
-    printf("\n\nConsumer: %s\n\n",buff_ques);
+    printf("\n\nConsumer: %s\n\n",buff_ques);                           // 隨機問一個問題
     sleep(1);
     //pthread_mutex_unlock(&mutex1);
     
     if((strcmp(buff_ans,qa_consumer[rand_num].ans)) == 0)
     {
-        printf("Consumer ANS: %s\n",buff_ans);
+        printf("Consumer ANS: %s\n",buff_ans);  //顯示答案
         sleep(1);
         
     }
@@ -86,23 +88,18 @@ static void* Proudcer(void *arg)
         //pthread_mutex_lock(&mutex1);
         QandA *qa_proudce = (QandA*)arg;
     
-        for(int i =0; i< sizeof(qa)/sizeof(qa[0]) ; i++)
+        for(int i =0; i< sizeof(qa)/sizeof(qa[0]) ; i++)                // 去搜尋正確的答案
         {
             if((strcmp(buff_ques,qa_proudce[i].ques)) == 0 )
             {
                 snprintf(buff_ans,BUFFSIZE,"%s",qa_proudce[i].ans);
-                break;
+                break; // 找到就跳出for迴圈
             }
-           /*if((strcmp(buff_ques,qa_proudce[i].ques)) != 0 )
-            {
-                snprintf(buff_ans,BUFFSIZE,"not found");
-            }*/
-
             else
                 snprintf(buff_ans,BUFFSIZE,"not found");
         }
-        printf("Proudcer ANS: %s\n",buff_ans);
-        break;
+        printf("Proudcer ANS: %s\n",buff_ans); // 顯示答案
+        break;  // 找到就跳出while迴圈
         sleep(1);
     }
     //pthread_mutex_unlock(&mutex1);
