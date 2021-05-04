@@ -58,8 +58,6 @@ int main (int argc, char *argv[])
 
 static void* Consumer(void *arg)
 {   
-  printf("\n--- Consumer ---\n");
-  
     //pthread_mutex_lock(&mutex1);
     int rand_num = rand() % sizeof(qa)/sizeof(qa[0]);
     QandA *qa_consumer = (QandA*)arg;
@@ -83,9 +81,9 @@ static void* Consumer(void *arg)
 
 static void* Proudcer(void *arg)
 {
-    printf("\n--- Proudcer ---\n");
+
     while(1){
-        pthread_mutex_lock(&mutex1);
+        //pthread_mutex_lock(&mutex1);
         QandA *qa_proudce = (QandA*)arg;
     
         for(int i =0; i< sizeof(qa)/sizeof(qa[0]) ; i++)
@@ -95,15 +93,18 @@ static void* Proudcer(void *arg)
                 snprintf(buff_ans,BUFFSIZE,"%s",qa_proudce[i].ans);
                 break;
             }
-           if((strcmp(buff_ques,qa_proudce[i].ques)) != 0 )
+           /*if((strcmp(buff_ques,qa_proudce[i].ques)) != 0 )
             {
                 snprintf(buff_ans,BUFFSIZE,"not found");
-            }
+            }*/
+
+            else
+                snprintf(buff_ans,BUFFSIZE,"not found");
         }
-        printf("Proudcer: %s\n",buff_ans);
+        printf("Proudcer ANS: %s\n",buff_ans);
         break;
         sleep(1);
     }
-    pthread_mutex_unlock(&mutex1);
+    //pthread_mutex_unlock(&mutex1);
     pthread_exit(0);
 }

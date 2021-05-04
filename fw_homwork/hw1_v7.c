@@ -44,8 +44,6 @@ int main (int argc, char *argv[])
         perror("join thread 1 error: ");
         pthread_mutex_destroy(&mutex1);
     } 
-    
-    
 
     if((pthread_join(thread2,NULL)) != 0){
         perror("join thread 2 error: ");
@@ -60,33 +58,33 @@ int main (int argc, char *argv[])
 
 static void* Consumer(void *arg)
 {   
-  printf("\n--- Consumer ---\n");
-  //while(1){
-    //pthread_mutex_lock(&mutex1);
+  
+  while(1){
+      
     int rand_num = rand() % sizeof(qa)/sizeof(qa[0]);
+    printf("rand_num= %d\n",rand_num);
     QandA *qa_consumer = (QandA*)arg;
     snprintf(buff_ques,BUFFSIZE,"%s",qa_consumer[rand_num].ques);
     printf("\n\nConsumer: %s\n\n",buff_ques);
     sleep(1);
-    //pthread_mutex_unlock(&mutex1);
     
     if((strcmp(buff_ans,qa_consumer[rand_num].ans)) == 0)
     {
         printf("Consumer ANS: %s\n",buff_ans);
         sleep(1);
-        //break;
+        break;
     }
-        
-    //}
-    printf("----------\n");
-  
-    //pthread_mutex_unlock(&mutex1);
+    
+    
+  }
+    printf("--------");
     pthread_exit(0);
+  
 }
 
 static void* Proudcer(void *arg)
 {
-    printf("\n--- Proudcer ---\n");
+    
     while(1){
         pthread_mutex_lock(&mutex1);
         QandA *qa_proudce = (QandA*)arg;
@@ -98,13 +96,13 @@ static void* Proudcer(void *arg)
                 snprintf(buff_ans,BUFFSIZE,"%s",qa_proudce[i].ans);
                 break;
             }
-           if((strcmp(buff_ques,qa_proudce[i].ques)) != 0 )
+           /*else
             {
                 snprintf(buff_ans,BUFFSIZE,"not found");
-            }
+            }*/
         }
         printf("Proudcer: %s\n",buff_ans);
-        break;
+       
         sleep(1);
     }
     pthread_mutex_unlock(&mutex1);
